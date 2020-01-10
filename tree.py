@@ -1,6 +1,7 @@
 from mcpi.minecraft import Minecraft
 import mcpi.block as block
 from threading import Thread
+import math
 import time
 mc = Minecraft.create()
 pos = mc.player.getTilePos()
@@ -12,6 +13,113 @@ log = block.Block(17,1)
 
 def setPixel(x1,z1,block):
 	mc.setBlock(x1,y,z1,block)
+def Sphere():
+    planetId = block.GLOWSTONE_BLOCK.id
+    x = pos.x
+    y = pos.y + 17
+    z = pos.z + 10
+
+    mc.setBlock(x,y,z,15)
+
+    radius = 15
+    angle = 0
+    speed = math.pi/ 10
+     
+    dx = math.cos(angle) * radius
+    dz = math.sin(angle) * radius
+    Px = round(x + dx)
+    Py = y
+    Pz = round(z + dz)
+    mc.setBlock(Px,Py,Pz,planetId)
+
+    while True:
+        period = 0.1
+        angle += speed * period
+        mc.setBlocks(Px + 2,Py + 2,Pz,Px,Py,Pz + 2,0)
+        dx = math.cos(angle) * radius
+        dz = math.sin(angle) * radius
+        Px = round(x + dx)
+        Py = y
+        Pz = round(z + dz)
+        mc.setBlocks(Px + 1,Py + 1,Pz,Px,Py,Pz + 1,planetId)
+        time.sleep(period)
+
+def buildCubes():
+	while True:
+		x = pos.x + 4
+		y = pos.y + 4
+		z = pos.z + 1
+		mc.setBlock(x,y,z,41)
+		x -= 1
+		y += 3
+		z += 1
+		mc.setBlock(x,y,z,20)
+		x += 2
+		y += 3
+		z += 2
+		mc.setBlock(x,y,z,57)
+		x += 2
+		z += 2
+		mc.setBlock(x,y,z,79)
+		x += 2
+		y -= 3
+		z += 1
+		mc.setBlock(x,y,z,41)
+		z += 6
+		mc.setBlock(x,y,z,20)
+		x -= 2
+		y += 3
+		z += 1
+		mc.setBlock(x,y,z,57)
+		x -= 2
+		z += 2
+		mc.setBlock(x,y,z,79)
+		x-= 2
+		y -=3
+		z += 2
+		mc.setBlock(x,y,z,41)
+		x -= 6
+		mc.setBlock(x,y,z,20)
+		x -= 2
+		y += 3
+		z -= 2
+		mc.setBlock(x,y,z,57)
+		x -= 2
+		z -= 2
+		mc.setBlock(x,y,z,79)
+		x -= 2
+		y -= 3
+		z -= 1
+		mc.setBlock(x,y,z,41)
+		z -= 6
+		mc.setBlock(x,y,z,20)
+		x += 2
+		y += 3
+		z -= 1
+		mc.setBlock(x,y,z,57)
+		x += 2
+		z -= 2
+		mc.setBlock(x,y,z,79)
+		x += 2
+		y -= 3
+		z -= 2
+		mc.setBlock(x,y,z,41)
+		y += 15
+		x += 1
+		z += 5
+		mc.setBlock(x,y,z,20)
+		x -= 1
+		y += 3
+		z += 2
+		mc.setBlock(x,y,z,57)
+		z += 2
+		mc.setBlock(x,y,z,79)
+		x += 6
+		mc.setBlock(x,y,z,41)
+		z -= 2
+		mc.setBlock(x,y,z,20)
+
+
 
 def buildStar():
 	x = pos.x - 6 
@@ -126,7 +234,6 @@ def buildTree():
 				draw_circle(x,y,r,leaves)
 				y += 1
 			r -= 1
-		print(y)
 		y -= 4
 		yMin -= 8
 		while y != yMin:
@@ -136,8 +243,10 @@ def buildTree():
 #Threads
 tree = Thread(target=buildTree)
 star = Thread(target=buildStar)
+cubes = Thread(target=buildCubes)
+sphere = Thread(target=Sphere)
 
 tree.start()
 star.start()
-
-
+cubes.start()
+sphere.start()
