@@ -3,6 +3,7 @@ import mcpi.block as block
 from threading import Thread
 import math
 import time
+from pygame import mixer
 mc = Minecraft.create()
 pos = mc.player.getTilePos()
 x = pos.x
@@ -10,6 +11,10 @@ y = pos.y
 z = pos.z
 leaves = block.Block(18,1)
 log = block.Block(17,1)
+
+mixer.init()
+mixer.music.load('Music\Xmas_theme.mp3')
+mixer.music.play()
 
 def setPixel(x1,z1,block):
 	mc.setBlock(x1,y,z1,block)
@@ -33,7 +38,7 @@ def Sphere():
     mc.setBlock(Px,Py,Pz,planetId)
 
     while True:
-        period = 0.1
+        period = 0.5
         angle += speed * period
         mc.setBlocks(Px + 2,Py + 2,Pz,Px,Py,Pz + 2,0)
         dx = math.cos(angle) * radius
